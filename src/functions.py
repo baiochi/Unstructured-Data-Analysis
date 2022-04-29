@@ -17,6 +17,11 @@ file_urls = {
 }
 load_image = lambda x : np.array(open_image(urlopen(file_urls[x])))
 
+# Convert HEX to RBG
+hex_to_rgb = lambda hex : tuple(int(hex.lstrip('#')[i:i+2], 16) for i in (0, 2, 4))
+# Convert RGB to HEX
+rgb_to_hex = lambda rgb_tuple : '#%02x%02x%02x' % rgb_tuple
+
 # Dected feature for a given classifier
 def feature_detection(rgb_image, gray_image, classifier, 
                       scaleFactor=1.3, minNeighbors=5, sub_search=False,
@@ -26,7 +31,7 @@ def feature_detection(rgb_image, gray_image, classifier,
     roi_rgb, roi_gray = (), ()
     
     # Select region of interest
-    classifier_results = classifier.detectMultiScale(gray_image, scaleFactor, minNeighbors)
+    classifier_results = classifier.detectMultiScale(gray_image, scaleFactor, int(minNeighbors))
         
     # Draw rectangle for current feature
     for (cx, cy, cw, ch) in classifier_results:
@@ -59,4 +64,26 @@ def video_scan(frame, classifiers):
         if classifier['sub_search']:
             for roi_rgb, roi_gray in zip(c_roi_rgb, c_roi_gray):
                 for sub_classifier in classifier['sub_class']:
-                    feature_detection(roi_rgb, roi_gray, **sub_classifier)
+                    feature_detection(roi_rgb, roi_gray, **classifiers[sub_classifier])
+
+
+# Print FPS on frame
+def print_fps(video, frame, font=cv2.FONT_HERSHEY_SIMPLEX, color=(255, 255, 255)):
+    
+    # Get FPS
+    fps = int(video.get(5))
+    
+    height, width, channel = frame.shape
+    
+    offset = int(height / len(str(fps))) - 10
+
+    cv2.putText(img=frame, 
+                text=str(fps), 
+                org=(50, offset), 
+                font=font, 
+                fontScale=1, 
+                color=color, 
+                thickness=5,
+                lineType=8)
+
+
