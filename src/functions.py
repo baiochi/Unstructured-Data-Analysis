@@ -58,8 +58,9 @@ def video_scan(frame, classifiers):
     gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     
     for classifier in classifiers.values():
-        # Detect features
-        c_roi_rgb, c_roi_gray = feature_detection(frame, gray_frame, **classifier)
+        # Detect features (global)
+        if not classifier['is_sub']:
+            c_roi_rgb, c_roi_gray = feature_detection(frame, gray_frame, **classifier)
         # Detect sub_features
         if classifier['sub_search']:
             for roi_rgb, roi_gray in zip(c_roi_rgb, c_roi_gray):
