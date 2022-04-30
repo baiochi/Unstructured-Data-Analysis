@@ -13,14 +13,19 @@ from src.defines     import IMAGES_URL
 from src.processors  import VideoProcessor
 
 RTC_CONFIGURATION = RTCConfiguration(
-    {
-      "RTCIceServer": [{
-        "urls": ["turn:turn.xxx.dev:5349"],
-        "username": "user",
-        "credential": "password",
-      }]
-    }
+    {"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
 )
+
+# Turn Server: https://ourcodeworld.com/articles/read/1175/how-to-create-and-configure-your-own-stun-turn-server-with-coturn-in-ubuntu-18-04
+# RTC_CONFIGURATION = RTCConfiguration(
+#     {
+#       "RTCIceServer": [{
+#         "urls": ["turn:turn.xxx.dev:5349"],
+#         "username": "user",
+#         "credential": "password",
+#       }]
+#     }
+# )
 
 # Modifty classifiers params
 def adjust_classifier_params():
