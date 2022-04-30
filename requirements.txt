@@ -1,5 +1,7 @@
 numpy
 matplotlib
-opencv-python
-mediapipe
 Pillow
+opencv-python-headless
+av
+mediapipe
+streamlit_webrtc
