@@ -6,11 +6,21 @@
 import urllib
 import streamlit as st
 import matplotlib.pyplot as plt
-from streamlit_webrtc import webrtc_streamer
+from streamlit_webrtc import webrtc_streamer, RTCConfiguration
 
 from src.functions   import *
 from src.defines     import IMAGES_URL
 from src.processors  import VideoProcessor
+
+RTC_CONFIGURATION = RTCConfiguration(
+    {
+      "RTCIceServer": [{
+        "urls": ["turn:turn.xxx.dev:5349"],
+        "username": "user",
+        "credential": "password",
+      }]
+    }
+)
 
 # Modifty classifiers params
 def adjust_classifier_params():
@@ -93,7 +103,9 @@ def show_video_detection_page():
 
 def show_live_video_detection_page():
 
-	ctx = webrtc_streamer(key='main_video', video_processor_factory=VideoProcessor)
+	ctx = webrtc_streamer(key='main_video',
+						rtc_configuration=RTC_CONFIGURATION,
+						video_processor_factory=VideoProcessor)
 	if ctx.video_processor:
 		ctx.video_processor.classifier_list = st.multiselect('Active classifiers', options=st.session_state['classifiers'])
 
