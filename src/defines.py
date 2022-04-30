@@ -1,17 +1,23 @@
 import cv2
 import urllib
 
-classifier_list = []
+IMAGES_URL = {
+    'lena.png':       'https://i.imgur.com/ncE3dty.png',
+    'ednaldo.jpg':    'https://i.imgur.com/JnJD9FB.jpg',
+    'batman.jpg':     'https://i.imgur.com/8jKnbg5.jpg',
+    'calculista.jpg': 'https://i.imgur.com/MQNty8H.jpg',
+    'vacilao.jpg':    'https://i.imgur.com/cgp0aY9.jpg',
+    'harold.jpg':     'https://i.imgur.com/C8YrIjB.jpg',
+    'tool.jpg':       'https://i.imgur.com/bgyZxWt.jpg'
+}
 
 # Load Face classifier
 frontal_face_classifier = cv2.CascadeClassifier(
     cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
-classifier_list.append(frontal_face_classifier)
 
 # Load Eye classifier
 eye_classifier = cv2.CascadeClassifier(
     cv2.data.haarcascades + 'haarcascade_eye.xml')
-classifier_list.append(eye_classifier)
 
 # Load Smile classifier
 smile_classifier = cv2.CascadeClassifier(
@@ -29,11 +35,11 @@ profile_face_classifier = cv2.CascadeClassifier(
 urllib.request.urlretrieve('https://raw.githubusercontent.com/Aravindlivewire/Opencv/master/haarcascade/aGest.xml', filename='xml/aGest.xml')
 hand_classifier = cv2.CascadeClassifier('xml/aGest.xml')
 
-
 # Create classifiers dictionary
-classifiers = {
+DEFAULT_CLASSIFIERS = {
     'frontal_face':
-    {
+    {   
+        'c_name'      : 'Frontal face',
         'classifier'  : frontal_face_classifier,
         'minNeighbors': 5,
         'color'       : (255,0,0),
@@ -43,6 +49,7 @@ classifiers = {
     },
     'profile_face':
     {
+        'c_name'      : 'Profile face',
         'classifier'  : profile_face_classifier,
         'minNeighbors': 5,
         'color'       : (255,0,255),
@@ -52,6 +59,7 @@ classifiers = {
     },
     'hand':
     {
+        'c_name'      : 'Hand',
         'classifier'  : hand_classifier,
         'minNeighbors': 3,
         'color'       : (255,255,0),
@@ -61,6 +69,7 @@ classifiers = {
     },
         'eye':
     {
+        'c_name'      : 'Eye',
         'classifier'  : eye_classifier,
         'minNeighbors': 8,
         'color'       : (0,0,255),
@@ -70,6 +79,7 @@ classifiers = {
     },
     'smile':
     {
+        'c_name'      : 'Smile',
         'classifier'  : smile_classifier,
         'minNeighbors': 10,
         'color'       : (0,255,0),
