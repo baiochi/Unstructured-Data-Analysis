@@ -4,10 +4,11 @@ streamlit==1.8.1
 streamlit_webrtc==0.36.1
 typing_extensions==4.1.1
 matplotlib
+seaborn
 numpy
+pandas
 Pillow
 mediapipe
 scipy
 fastdtw
-seaborn
 tqdm
