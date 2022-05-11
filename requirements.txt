@@ -12,3 +12,4 @@ mediapipe
 scipy
 fastdtw
 tqdm
+pickle5
