@@ -1,11 +1,11 @@
 # Streamlit App
 
-https://share.streamlit.io/baiochi/opencv-pattern-recognition/main/app.py
+https://share.streamlit.io/baiochi/unstructured-data-analysis/main/app.py
 
 # Build on localhost
 
-1. **clone repository**
-`git clone https://github.com/baiochi/Unstructured-Data-Analysis.git`
+1. **clone repository**  
+`git clone https://github.com/baiochi/Unstructured-Data-Analysis.git`. 
 
 2. **create virtual env**  
 `python -m venv venv`
