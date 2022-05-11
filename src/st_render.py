@@ -8,9 +8,11 @@ import streamlit as st
 import matplotlib.pyplot as plt
 from streamlit_webrtc import webrtc_streamer, RTCConfiguration
 
-from src.functions   import *
-from src.defines     import IMAGES_URL
-from src.processors  import VideoProcessor
+from src.functions   			 import *
+from src.defines     			 import IMAGES_URL
+from src.processors  			 import VideoProcessor, VideoProcessor2
+from src.sign_language_functions import REFERENCE_SIGNS
+from src.css_styles 			 import *
 
 RTC_CONFIGURATION = RTCConfiguration(
     {"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
@@ -26,6 +28,63 @@ RTC_CONFIGURATION = RTCConfiguration(
 #       }]
 #     }
 # )
+
+######################################################
+#                 Instructions Page
+######################################################
+# Instructions
+def show_main_page():
+
+	st.markdown(f'''
+	*Codes from {link_style("Let's Code", "https://letscode.com.br/")} Pi-DS course.   
+	Select the app mode on the sidebar.*
+	''', unsafe_allow_html=True)
+
+	st.markdown(
+	'''
+	This app aims to explore cases of Unstructured Data analysis.
+	Unlike a conventional table or dataframe, these datasets consists on data that doesn't have a predifined structured, 
+	like texts, images, videos or audios.  
+  
+	There is a continuous increase in unstructured data, due to the quickly growing uses of digital applications and services,
+	and if analyzed correctly, it can provide quality insights that not even statistical methods alone could explain.  
+
+	Some examples of methods that can be used to exploit unstructured data:  
+	- **Audio processing**: process audio data and turns into signals to identify patterns;  
+	- **Speech-to-text**: convert audio signals to readable text;  
+	- **Pattern recognition algorithms**: identify people, animals, sings or any object of interest of images or videos;  
+	- **Natural language Processing**: can be used to understand the meaning in texts, very usefull to analyze bussiness documents or social media posts.  
+
+	'''
+	)
+	st.markdown(h2_style('OpenCV'), unsafe_allow_html=True)
+	st.markdown(
+	f'''
+	{link_style("Open Source Computer Vision Library", "https://opencv.org/")} offers powerfull image and video processing tools to 
+	analyze and create pattern recognition algorithms.
+	''', unsafe_allow_html=True)
+
+	st.markdown(h2_style('MediaPipe'), unsafe_allow_html=True)
+	st.markdown(
+	f'''
+	Developed by Google, {link_style("MediaPipe", "https://google.github.io/mediapipe/")} library offers a cross-platform and customizable 
+	Machine learning solutions for live and streaming media.  
+	Some examples:  
+	- Face Detection;  
+	- Holistic: full pose recognition (face, body, hands etc);
+	- Instant Motion Tracking
+	''', unsafe_allow_html=True)
+
+	st.markdown(h2_style('Additional Information'), unsafe_allow_html=True)
+	st.markdown(
+	f'''
+	Source code: {link_style("GitHub", "https://github.com/baiochi/OpenCV-Pattern-Recognition")}  
+	Contact: {link_style("e-mail", "mailto:joao.baiochi@outlook.com.br")}  
+	''', unsafe_allow_html=True)
+
+######################################################
+#                 Image Detection Page
+######################################################
 
 # Modifty classifiers params
 def adjust_classifier_params():
@@ -61,7 +120,6 @@ def adjust_classifier_params():
 				st.session_state['classifiers'] = load_classifiers()
 				st.success('Values set to default')
 
-
 def image_classifier_selection(frame):
 	
 	classifier_list = st.multiselect('Active classifiers', options=st.session_state['classifiers'])
@@ -70,9 +128,8 @@ def image_classifier_selection(frame):
 
 def show_image_detection_page():
 
-	# SIDEBAR
+	# Sidebar Select image
 	with st.sidebar.expander(label='Image Options', expanded=False):
-
 		image_opt_choice = st.radio('Select an option to load a image:', options=('Upload file', 'Type image url', 'Select from database'))
 
 		if image_opt_choice == 'Upload file':
@@ -87,34 +144,79 @@ def show_image_detection_page():
 			sample_image = st.selectbox('Select an image:', options=IMAGES_URL.keys())
 			if sample_image:
 				st.session_state['image'] = load_image_url(IMAGES_URL[sample_image])
+		
+	# Sidebar Params configuration
+	adjust_classifier_params()
 
 	# MAIN
 	if isinstance(st.session_state['image'], np.ndarray):
-
+		# Create a copy of session_state image
 		_original_image = st.session_state['image'].copy()
-
 		# Select patterns to detect
 		image_classifier_selection(st.session_state['image'])
 		# Print image
 		st.image(st.session_state['image'], width=600)
-
 		# Reset image without drawings
 		st.session_state['image'] = _original_image
-
-		
+	
+######################################################
+#                 Image Detection Page
+######################################################
 			
 def show_video_detection_page():
 	pass
 
 def show_live_video_detection_page():
 
+	# Sidebar Params configuration
+	adjust_classifier_params()
+
+	# Video window
 	ctx = webrtc_streamer(key='main_video',
 						rtc_configuration=RTC_CONFIGURATION,
 						video_processor_factory=VideoProcessor)
+	# Select classifiers
 	if ctx.video_processor:
 		ctx.video_processor.classifier_list = st.multiselect('Active classifiers', options=st.session_state['classifiers'])
 
+######################################################
+#                 Language Sign Page
+######################################################
 
+def show_language_sign_page():
+
+	st.markdown(f'''
+	Detailed instructions describe in the following {link_style("notebook", "https://github.com/baiochi/OpenCV-Pattern-Recognition/blob/205f910acefe879efddc69b72b25d18847d5531e/notebook/Sign%20Language%20Detection.ipynb")}
+	''', unsafe_allow_html=True)
+
+	# Video window
+	ctx = webrtc_streamer(key='main_video',
+						rtc_configuration=RTC_CONFIGURATION,
+						video_processor_factory=VideoProcessor2)
+
+	if ctx.video_processor:
+		with st.sidebar.expander(label='Tracking Options', expanded=True):
+			# Recording checkbox
+			ctx.video_processor.recording = st.checkbox('Start tracking sign', 
+														value=False,
+														help='Double click after the first time',
+														key='recording_checkbox')
+			
+			# Show references
+			if st.checkbox('Show reference images'):
+				st.text('Temporarily unavailable')
+
+			# Show database
+			if st.checkbox('Show known letters', help='Current mapped signs in database.'):
+				st.text(list(REFERENCE_SIGNS.keys()))
+	
+	with st.expander("Known bugs"):
+		st.markdown(
+		"""
+		> Current processing for predict sign can take up to 0.05 seconds per frame, wich can raise WebRTC Exception 'is taking too long to execute'. Depending on your current bandwidth this can occur since the first run.  
+		
+		> Since the database is very small, current predictions can't generalize very well, some signs are hard to reproduce, and letters like 'C' and 'I' have a high false positive rate.
+		""")
 
 ######################################################
 #                 Deprecated
