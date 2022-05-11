@@ -9,3 +9,6 @@ Pillow
 mediapipe
 scipy
 fastdtw
+seaborn
+pickle
+tqdm

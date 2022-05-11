@@ -3,7 +3,6 @@
 #             Streamlit Rendering Functions
 ######################################################
 
-import urllib
 import streamlit as st
 import matplotlib.pyplot as plt
 from streamlit_webrtc import webrtc_streamer, RTCConfiguration

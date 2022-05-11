@@ -20,8 +20,6 @@ import mediapipe as mp
 # Image visualizations
 import matplotlib.pyplot as plt
 import seaborn as sns; sns.set()
-import plotly.express as px
-import plotly.graph_objects as go
 
 # Read mediapipe labels
 from google.protobuf.json_format import MessageToDict

@@ -4,17 +4,12 @@
 
 # Supress warnings
 import warnings; warnings.filterwarnings('ignore')
-# Array manipulation
-import numpy as np
 # Image processing and visualization
-import cv2
-import matplotlib.pyplot as plt
 from PIL.Image import open as open_image
 # HTTP requests
 from urllib.request import urlopen
 # Web rendering API
 import streamlit as st
-import mediapipe as mp
 # Custom functions
 from src.functions   import *
 from src.defines     import *
