@@ -90,7 +90,7 @@ CYAN  = '\033[36m'
 
 # Load binary containing data from reference signs
 with open('notebook/database/reference_signs_2.pickle', 'rb') as file:
-    REFERENCE_SIGNS = pickle.load(file)
+    REFERENCE_SIGNS = pickle.load(file, pickle.HIGHEST_PROTOCOL)
 
 # Draw annotations for detected hand
 def draw_hand_landmarks(frame:np.ndarray, results:any) -> np.ndarray:
