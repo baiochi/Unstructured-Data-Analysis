@@ -40,15 +40,6 @@ mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 mp_hands = mp.solutions.hands
 
-"""
-.streamlit/config.toml
-[theme]
-base="dark"
-primaryColor="#f5b324"
-backgroundColor="#1e1e22"
-secondaryBackgroundColor="#26262a"
-"""
-
 # Image drawing colors
 BLUE_HEX   = '#00fafd'    
 YELLOW_HEX = '#f5b324'   
